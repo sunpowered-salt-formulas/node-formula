@@ -12,7 +12,7 @@ get-npm:
     - user: {{ npm_user }}
     - makedirs: True
     - require:
-      - pkg: nodejs
+      - cmd: make-node
   cmd.wait:
     - cwd: /usr/src/npm
     - user: {{ npm_user }}
