@@ -1,6 +1,6 @@
 {%- from "node/map.jinja" import node, npm_bin with context %}
 
-{%- if grains['os'] == 'Ubuntu' and salt['pillar.get']('node:install_from_ppa') %}
+{%- if grains['os'] in ['Ubuntu', 'Debian'] and salt['pillar.get']('node:install_from_ppa') %}
 nodejs.ppa:
   pkg.installed:
     - name: apt-transport-https
@@ -15,22 +15,7 @@ nodejs.ppa:
     - key_url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
     - keyserver: keyserver.ubuntu.com
     - require_in:
-      pkg: nodejs
-{%- else %}
-npm:
-{%- if grains['os'] == 'Debian' and grains['osrelease']|float < 8 %}
-  file.exists:
-    - name: {{ npm_bin }}
-    - require:
-      - file: install-npm
-{% include 'node/source_npm.sls' %}
-{%- else %}
-  pkg.installed:
-    - name: {{ node.npm_pkg }}
-    - reload_modules: true
-    - require:
-      - pkg: nodejs
-{%- endif %}
+      pkg: node
 {%- endif %}
 nodejs:
   pkg.installed:
